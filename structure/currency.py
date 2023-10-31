@@ -2,6 +2,8 @@ from dataclasses import dataclass, asdict
 from copy import copy
 from math import exp, log
 
+from util import encrypt
+
 LOG_2 = log(2)
 
 
@@ -13,6 +15,7 @@ class Currency:
     multiplier: int
     total_currency: int
     frozen: int
+    __token: str
 
     @staticmethod
     def from_row(row):
@@ -25,8 +28,9 @@ class Currency:
         multiplier = row[3]
         total_currency = row[4]
         frozen = row[5]
+        __token = row[6]
         return Currency(
-            unit, code, total_value, multiplier, total_currency, frozen)
+            unit, code, total_value, multiplier, total_currency, frozen, __token)
 
     def get_unit_value(self) -> float:
         return self.total_value / self.frozen
@@ -43,6 +47,10 @@ class Currency:
 
     def jsonify(self) -> dict:
         result = asdict(self)
+        for key in list(result.keys()):
+            if '__' not in key:
+                continue
+            result.pop(key)
 
         extra = self.get_extra()
         result['extra'] = extra
@@ -72,3 +80,6 @@ class Currency:
         result = copy(self)
         result.frozen = result.total_currency - rotating
         return result
+
+    def check(self, token: str) -> bool:
+        return encrypt(token) == self.__token

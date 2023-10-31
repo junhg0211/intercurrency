@@ -13,3 +13,7 @@ class Response:
     @staticmethod
     def ok(result: ResultType) -> 'Response':
         return Response(200, 'OK', result)
+
+    @staticmethod
+    def unauthorised() -> 'Response':
+        return Response(401, 'unauthorised', dict())

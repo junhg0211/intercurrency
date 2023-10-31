@@ -42,6 +42,11 @@ def post_api_currency_id_rotate(currency_id: str):
         return asdict(response), 400
 
     before = currency
+    token = data.get('token')
+    if token is None or not before.check(token):
+        response = Response.unauthorised()
+        return asdict(response), 401
+
     if not before.can_rotate(elit):
         response = Response(400, '`elit` limit exceeded.', dict())
         return asdict(response), 400
@@ -74,6 +79,11 @@ def post_api_currency_id_freeze(currency_id: str):
         return asdict(response), 400
 
     before = get_currency(currency_id)
+    token = data.get('token')
+    if token is None or not before.check(token):
+        response = Response.unauthorised()
+        return asdict(response), 401
+
     if amount > before.get_rotating():
         response = Response(400, '`amount` limit exceeded.', dict())
         return asdict(response), 400
@@ -106,6 +116,11 @@ def post_api_currency_id_refresh(currency_id: str):
         return asdict(response), 400
 
     before = get_currency(currency_id)
+    token = data.get('token')
+    if token is None or not before.check(token):
+        response = Response.unauthorised()
+        return asdict(response), 401
+
     if rotating >= before.frozen:
         response = Response(
             400, 'rotating limit exceeded.', dict())
