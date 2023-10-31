@@ -2,6 +2,8 @@ from json import dumps
 
 from requests import get, post
 
+from util import get_secret
+
 API_URL = 'http://localhost:5000/api'
 
 
@@ -141,16 +143,12 @@ class Currency:
 
 
 if __name__ == '__main__':
-    TOKEN = 'QDmJPVOjPGuOSlRpplhydEjZVtQrELFhWRjJIYbxYvSUKVKUIdHRWXnzQCUzhMji'
+    TOKEN = get_secret('tokens.zst')
     currency = Currency('zst', TOKEN)
 
-    # currency.refresh(999)
-    # print(repr(currency))
+    currency.refresh(20)
+    print(repr(currency))
 
     # amount = currency.rotate(20)
     # print(amount)
     # print(repr(currency))
-
-    elit = currency.freeze(0.01)
-    print(elit)
-    print(repr(currency))
