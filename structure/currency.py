@@ -14,6 +14,20 @@ class Currency:
     total_currency: int
     frozen: int
 
+    @staticmethod
+    def from_row(row):
+        if row is None:
+            return None
+
+        unit = row[0]
+        code = row[1]
+        total_value = row[2]
+        multiplier = row[3]
+        total_currency = row[4]
+        frozen = row[5]
+        return Currency(
+            unit, code, total_value, multiplier, total_currency, frozen)
+
     def get_unit_value(self) -> float:
         return self.total_value / self.frozen
 
